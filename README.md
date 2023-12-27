@@ -31,15 +31,9 @@ The training and dev sets should be put under `data/.` In other words, two files
 
 ### Task 2: Evaluating N-gram Models
   - After building the models and implementing the smoothing techniques, we evaluated them by computing the perplexity (PPL) of the dev set.
-
-|Column name|Description|
-| --------- | --------- |
-|id|The id of the input sentence.|ground_truth|The ground truth label of the input sentence, copied from the dataset. |
-|prediction|1 if the sentence has grammar errors, 0 if not. In other words, whether the POS sequence can be parsed successfully with your grammar and parser.|
-
-### Task 3: Evaluation and error analysis
-- We evaluate the performance of our grammar checker by calculating its precision and recall on the data available to us. To do that, we compared the prediction of our system on a given sentence and its corresponding label in the dataset. 
-
+### Additional Task: KenLM
+  - Use KenLM to train the same bigram and trigram models using the same training data.
+    
 # Report and Results
 Further details and results can be found [here](https://github.com/Leen-Alzebdeh/NLP-LMs/blob/main/REPORT.md)
 
