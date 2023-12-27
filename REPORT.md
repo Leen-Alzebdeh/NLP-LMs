@@ -1,3 +1,13 @@
+# Language Models Task Report
+
+## Justifications
+| Decisions Made + Design Choices|Justification |
+| ------------------------------ | ------------ |
+| Additional cleaning and transformations done to data: No additional cleaning and transformations were done to the data. | We did not require any additional changes to the data, as the data was cleaned/transformed well. <br>This included keeping the lexical markers, as the lexical markers contain additional data to the phenomes that can aid in future analysis of of phenome sequences. The phenomes are also more differentiated with the lexical markers, giving us a wider array of data to train our model with. |
+| How are begin-of-utterance and end-of-utterance identified: | The original data is organized per utterance sequence. The `<s>` symbol is added to the beginning of an utterance (at the start of a new data line), and the </s> symbol is added to the end of an utterance (at the end of that line). The “tokenize_sentences” function iterates through the data file, tokenizing each line. |
+|How OOV words are handled: Excluded from training. | Excluding OOV words instead of using alternatives such as UNK tokens and Backoff can result in faster performance and a more simplified language model for our purposes. This helps us build a more meaningful language model.<br> Because the training set and dev set are both made up of ARPAbet sequences, there should not be a large number of unknown words, as even unknown or pseudo words reuse the same ARPAbet phenomes in a rearranged manner. ARPAbet sequences are intentionally well structured for linguistic purposes, and through training can inherently aid in limiting the probabilities of OOV utterances. <br>For data cleaning, we decided to include non-word utterances if they were able to be broken down into relevant ARPAbet phenomes. If they were not, they were excluded. To exclude pseudowords and unknown words, would be the most appropriate choice as it ensures our data training is not producing inaccurate perplexities.|
+
+## Results
 
 | Model           | Smoothing  | Training set PPL                                            | Dev set PPL                                                 |
 | --------------- | ---------- | ----------------------------------------------------------- | ----------------------------------------------------------- |
@@ -8,40 +18,4 @@
 | trigram         | Laplace    |    5.86                                       |  5.80                                          |
 | bigram (KenLM)  | Kneser-Ney | 15.91 (w/ OOVs), 15.91 (w/o OOVs) | 15.90 (w/ OOVs), 15.90 (w/o OOVs) |
 | trigram (KenLM) | Kneser-Ney | 8.16 (w/ OOVs), 8.16 (w/o OOVs)     | 8.35 (w/ OOVs), 8.35 (w/o OOVs)   |
-
-
-# Language Models Task Report
-
-| Decisions Made + Design Choices|Justification |
-| ------------------------------ | ------------ |
-| Additional cleaning and transformations done to data: No additional cleaning and transformations were done to the data. | We did not require any additional changes to the data, as the data was cleaned/transformed well. <br>This included keeping the lexical markers, as the lexical markers contain additional data to the phenomes that can aid in future analysis of of phenome sequences. The phenomes are also more differentiated with the lexical markers, giving us a wider array of data to train our model with. |
-
-
-## Evaluation and Error Analysis
-
-**Precision**: ~0.251.
-**Recall**: ~0.950. <br>
-Values of TP, TN, FP, and FN (respectively): 132, 71, 393, 7
-
-| | 1 (error) | 0 (no error) |
-|-|----------| --------------|
-|1 (error) | 132 | 393|
-|0 (no error)| 7 | 71|
-
-## Reasons for the False Positives
-1. Complex sentences: The grammar has limited capability to recognize some complex sentences, such as those with multiple clauses or subordinate clauses. If a user tries to parse a sentence with these structures that aren't addressed in the grammar, it could be erroneously flagged as having a grammatical error.  <br>Example: `102 0 It looks nice and has a good message . PRP VBZ JJ CC VBZ DT JJ NN .`
-   * While the grammar can recognize phrases like NP CC NP, VP CC VP, S CC S, and etc (x CC x). It is likely to miss clauses of different phrase types.
-2. Lack of flexibility with commas: The grammar recognizes the comma usages “NP, NP” but the language has many varied examples which include: 
-   - `435 0 I keep that in my mind , for ever ! PRP VBP DT IN PRP$ NN , IN RB .`
-   - `21 0 If not , what do you suggest ? IN RB , WP VBP PRP VB .`
-   - `58 0 However, we would like to suggest something: RB , PRP MD VB TO VB NN:`
-3. Inability to recognize multiple verbs: In the grammar, there are no rules that account for two or more verbs that directly follow each other in correct sentences. Examples:
-   - I have received your letter . PRP VBP VBN PRP$ NN .
-   - Your time has been stolen . PRP$ NN VBZ VBN VBN .
-## Reasons for the False Negatives
-1. Lack of constraints on the relationship between verb and subject: Without specific constraints on the combination of verbs and subjects, the grammar might approve of sequences that are nonsensical in natural language use. An example of this is a personal pronoun directly followed by a gerund verb.<br>Example: `792 1 Be you studing a lot ? VB PRP VBG DT NN .`
-   * This has a base verb followed by a personal pronoun at the beginning of the sentence.
-2. Lack of constraints on determiners: the grammar does not ensure that determiners are used properly, for example, it does not distinguish indefinite vs definite determiners (they are all given the level DT) and does not check for the different rules of both. <br>Example: `813 1 I have a big news . PRP VBP DT JJ NNS .`
-   - This has an indefinite article with a plural noun.
-
 
