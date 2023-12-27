@@ -28,15 +28,21 @@ The training and dev sets should be put under `data/.` In other words, two files
 ## Tasks
 ### Task 1: Training N-gram Models
   -  We trained n-gram language models: unigram, bigram, and trigram models using the training set described above.
-
 ### Task 2: Evaluating N-gram Models
   - After building the models and implementing the smoothing techniques, we evaluated them by computing the perplexity (PPL) of the dev set.
 ### Additional Task: KenLM
   - Use KenLM to train the same bigram and trigram models using the same training data.
     
-# Report and Results
-Further details and results can be found [here](https://github.com/Leen-Alzebdeh/NLP-LMs/blob/main/REPORT.md)
-
+# Results
+| Model           | Smoothing  | Training set PPL                                            | Dev set PPL                                                 |
+| --------------- | ---------- | ----------------------------------------------------------- | ----------------------------------------------------------- |
+| unigram         | -          |      34.77                                      |     34.72                                       |
+| bigram          | unsmoothed |            12.83                               |                      12.87                     |
+| bigram          | Laplace    |        12.88                                   |  12.92                                         |
+| trigram         | unsmoothed |      5.40                                      |     5.36                                      |
+| trigram         | Laplace    |    5.86                                       |  5.80                                          |
+| bigram (KenLM)  | Kneser-Ney | 15.91 (w/ OOVs), 15.91 (w/o OOVs) | 15.90 (w/ OOVs), 15.90 (w/o OOVs) |
+| trigram (KenLM) | Kneser-Ney | 8.16 (w/ OOVs), 8.16 (w/o OOVs)     | 8.35 (w/ OOVs), 8.35 (w/o OOVs)   |
 # Contributors
 
 Leen Alzebdeh @Leen-Alzebdeh
